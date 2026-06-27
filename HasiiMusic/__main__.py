@@ -13,7 +13,8 @@
 import asyncio
 import importlib
 import sys
-
+import threading
+from http.server import SimpleHTTPRequestHandler, HTTPServer
 from pyrogram import idle
 
 # Raise the file descriptor limit on Linux to avoid "[Errno 24] Too many open files"
@@ -31,6 +32,17 @@ if sys.platform != "win32":
 from HasiiMusic import (tune, app, config, db,
                    logger, stop, userbot, yt)
 from HasiiMusic.plugins import all_modules
+
+
+# Function to handle the TCP health check on port 8080
+def run_health_check_server():
+    try:
+        server_address = ('', 8080)
+        httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
+        logger.info("🌐 Health Check Server running on port 8080...")
+        httpd.serve_forever()
+    except Exception as e:
+        logger.error(f"Failed to start Health Check Server: {e}")
 
 
 async def main():
@@ -87,6 +99,10 @@ async def main():
 
 if __name__ == "__main__":
     try:
+        # Start the health check web server in a separate background thread
+        web_thread = threading.Thread(target=run_health_check_server, daemon=True)
+        web_thread.start()
+
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
     except KeyboardInterrupt:
@@ -96,9 +112,7 @@ if __name__ == "__main__":
         raise
     except Exception as e:
         logger.error(f"Unexpected error caused bot to stop: {e}", exc_info=True)
-        # Don't raise - allow clean shutdown
     finally:
-        # Ensure cleanup happens
         try:
             if loop.is_running():
                 loop.stop()
