@@ -311,7 +311,7 @@ class YouTube:
                 "quiet": True,
                 "no_warnings": True,
                 "cookiefile": cookie,
-                "format": "bestaudio/best",
+                "format": "ba/b",
                 "noplaylist": True,
                 "socket_timeout": 20,
                 "extractor_retries": 5,
@@ -442,9 +442,9 @@ class YouTube:
                 if self._max_video_height and self._max_video_height > 0:
                     height_filter = f"[height<={self._max_video_height}]"
                 format_chain = (
-                    f"bestvideo[ext=mp4]{height_filter}+bestaudio[ext=m4a]/"
-                    f"bestvideo{height_filter}+bestaudio/"
-                    "bestvideo+bestaudio/best"
+                    f"bv[ext=mp4]{height_filter}+ba[ext=m4a]/"
+                    f"bv{height_filter}+ba/"
+                    "bv+ba/b"
                 )
                 ydl_opts = {
                     **base_opts,
@@ -461,7 +461,7 @@ class YouTube:
                 # Audio mode: favor m4a/opus for best compatibility
                 ydl_opts = {
                     **base_opts,
-                    "format": "bestaudio[ext=m4a]/bestaudio[acodec=opus]/bestaudio/best",
+                    "format": "ba[ext=m4a]/ba[acodec=opus]/ba/b",
                     "postprocessors": [],
                 }
 
