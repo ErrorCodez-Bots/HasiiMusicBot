@@ -21,9 +21,10 @@ It provides a centralized Config class that manages all configuration settings.
 """
 
 import os
-from getenv import getenv
+from os import getenv # <-- Fixed: now importing from the built-in 'os' module
 from typing import List
 from dotenv import load_dotenv
+
 
 # Load environment variables from .env file (create one from sample.env)
 load_dotenv()
