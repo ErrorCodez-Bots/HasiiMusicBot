@@ -57,8 +57,12 @@ class Config:
         # ============ DATABASE CONFIGURATION ============
         # MongoDB connection URL (mongodb+srv://...)
         self.MONGO_URL: str = getenv("MONGO_DB_URI", "")
-        # PORT
-        PORT = int(os.environ.get("PORT", 8080))
+        
+        import os  # <-- MAKE SURE THIS LINE IS AT THE VERY TOP OF CONFIG.PY
+class Config:
+    def __init__(self):
+        # Your existing config variables...
+        self.PORT = int(os.environ.get("PORT", 8080))
 
         # ============ MUSIC BOT LIMITS ============
         # Convert minutes to seconds for duration limit
