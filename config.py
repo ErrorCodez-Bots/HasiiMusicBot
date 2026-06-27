@@ -20,7 +20,8 @@ This module loads and validates all environment variables required for the bot t
 It provides a centralized Config class that manages all configuration settings.
 """
 
-from os import getenv
+import os
+from getenv import getenv
 from typing import List
 from dotenv import load_dotenv
 
@@ -54,15 +55,13 @@ class Config:
         # Your user ID (get from @userinfobot)
         self.OWNER_ID: int = int(getenv("OWNER_ID", "0"))
 
+        # ============ WEB SERVER PORT CONFIGURATION ============
+        # Port for passing hosting platform TCP health checks
+        self.PORT: int = int(os.environ.get("PORT", 8080))
+
         # ============ DATABASE CONFIGURATION ============
         # MongoDB connection URL (mongodb+srv://...)
         self.MONGO_URL: str = getenv("MONGO_DB_URI", "")
-        
-        import os  # <-- MAKE SURE THIS LINE IS AT THE VERY TOP OF CONFIG.PY
-class Config:
-    def __init__(self):
-        # Your existing config variables...
-        self.PORT = int(os.environ.get("PORT", 8080))
 
         # ============ MUSIC BOT LIMITS ============
         # Convert minutes to seconds for duration limit
@@ -218,3 +217,5 @@ class Config:
                 f"❌ Missing required environment variables: {', '.join(missing)}\n"
                 f"Please check your .env file and ensure all required variables are set."
             )
+
+  
